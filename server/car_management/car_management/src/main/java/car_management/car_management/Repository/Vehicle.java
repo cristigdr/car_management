@@ -29,7 +29,7 @@ public class Vehicle {
 
     @Getter
     @Setter
-    @Column(name = "brand", nullable = false, length = 4)
+    @Column(name = "manufacturing_year", nullable = false, length = 4)
     private Integer yearManuf;
 
     @Getter
