@@ -3,9 +3,12 @@ package car_management.car_management.Service;
 import car_management.car_management.Repository.ITechDataRepository;
 import car_management.car_management.Repository.TechData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TechDataService {
     @Autowired
     private ITechDataRepository techRepo;
