@@ -24,6 +24,7 @@ public class Review {
     @Column(name = "review_date", nullable = false, length = 4)
     private Date reviewDate;
 
+    public Review() {}
     public Review(Vehicle vehicle, Date reviewDate) {
         this.vehicle = vehicle;
         this.reviewDate = reviewDate;

@@ -42,6 +42,7 @@ public class TechData {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
+    public TechData() {}
     public TechData(String fuelType, Float consumption, Integer power, Float engineDisplacement, Integer nrCylinders, Vehicle vehicle) {
         this.fuelType = fuelType;
         this.consumption = consumption;

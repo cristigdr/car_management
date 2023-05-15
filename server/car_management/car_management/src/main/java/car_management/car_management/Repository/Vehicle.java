@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class Vehicle {
 
     @Getter
     @Setter
-    @Column(name = "plate_number", nullable = false, unique = true,length = 1)
+    @Column(name = "plate_number", nullable = false, unique = true,length = 10)
     private String plateNumber;
 
     @Getter
@@ -85,4 +86,6 @@ public class Vehicle {
         this.registrationDate = registrationDate;
         this.owner = owner;
     }
+
+    public Vehicle() {this.reviews = new ArrayList<>();}
 }
