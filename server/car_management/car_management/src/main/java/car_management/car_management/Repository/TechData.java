@@ -36,6 +36,8 @@ public class TechData {
     @Column(name = "cylinder_number", nullable = false, unique = true,length = 2)
     private Integer nrCylinders;
 
+    @Getter
+    @Setter
     @OneToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;

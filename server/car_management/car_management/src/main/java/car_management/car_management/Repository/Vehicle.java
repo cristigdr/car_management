@@ -54,7 +54,7 @@ public class Vehicle {
 
     @Getter
     @Setter
-    @OneToOne(mappedBy = "vehicle")
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     private TechData techData;
 
     @Getter
