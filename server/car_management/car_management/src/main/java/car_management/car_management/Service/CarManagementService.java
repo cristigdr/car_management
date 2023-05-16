@@ -38,6 +38,15 @@ public class CarManagementService {
         return generalDataRepo.findByVehicleId(vehicleId);
     }
 
+
+
+    public Vehicle findByPlateNr(String plateNumber){
+        return vehicleRepository.findByplateNumber(plateNumber);
+    }
+
+
+
+
     public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
 
         vehicle.setTechData(techData);

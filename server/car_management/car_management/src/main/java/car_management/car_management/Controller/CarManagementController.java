@@ -29,6 +29,18 @@ public class CarManagementController {
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
+
+    @GetMapping("/findPlateNr/{plateNr}")
+    public ResponseEntity<Vehicle> getVehicleByPlateNr(@PathVariable("plateNr") String  plateNr) {
+        Vehicle vehicle = carService.findByPlateNr(plateNr);
+        if (vehicle != null) {
+            return ResponseEntity.ok(vehicle);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @GetMapping("/getTechData/{id}")
     public ResponseEntity<TechData> getTechDataByVehicleId(@PathVariable("id") Long vehicleId) {
         TechData techData = carService.getTechDataByVehicleId(vehicleId);
