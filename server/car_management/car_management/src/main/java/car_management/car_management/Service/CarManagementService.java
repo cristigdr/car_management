@@ -107,5 +107,14 @@ public class CarManagementService {
 
         return generalDataRepo.save(existingGenData);
     }
+
+    public String deleteVehicle(Long id){
+        try{
+            this.vehicleRepository.deleteById(id);
+            return "Deletion Successfully";
+        }catch (Exception e){
+            return "Failed o delete user with id" + id;
+        }
+    }
 }
 

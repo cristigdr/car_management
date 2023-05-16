@@ -112,6 +112,9 @@ public class CarManagementController {
         }
     }
 
+    @DeleteMapping("/deleteVehicle/{id}")
+    public String deleteVehicle(@PathVariable("id") Long vehicleId){return this.carService.deleteVehicle(vehicleId);}
+
     private <T> T convertToObject(Object object, Class<T> objectType) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(object, objectType);
