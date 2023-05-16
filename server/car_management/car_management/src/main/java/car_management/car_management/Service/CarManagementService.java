@@ -4,6 +4,8 @@ import car_management.car_management.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CarManagementService {
     private IVehicleRepository vehicleRepository;
@@ -19,6 +21,10 @@ public class CarManagementService {
         this.reviewRepository = reviewRepository;
         this.generalDataRepo = generalDataRepo;
     }
+
+    public List<Vehicle> getVehicles() {
+        return (List<Vehicle>) vehicleRepository.findAll();
+    } //finAll returns an Iterable, that's why we cast the return to List
 
     public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
 

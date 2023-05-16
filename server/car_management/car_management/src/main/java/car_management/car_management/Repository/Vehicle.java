@@ -1,5 +1,6 @@
 package car_management.car_management.Repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,16 +33,19 @@ public class Vehicle {
     @Getter
     @Setter
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Review> reviews;
 
     @Getter
     @Setter
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private TechData techData;
 
     @Getter
     @Setter
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private GeneralData generalData;
 
     @Getter

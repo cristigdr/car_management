@@ -6,11 +6,13 @@ import car_management.car_management.Repository.TechData;
 import car_management.car_management.Repository.Vehicle;
 import car_management.car_management.Service.CarManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +22,12 @@ public class CarManagementController {
     @Autowired
     public CarManagementController(CarManagementService carService){
         this.carService = carService;
+    }
+
+    @GetMapping("/getVehicles")
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+        List<Vehicle> vehicles = carService.getVehicles();
+        return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
     @PostMapping("/insert")
