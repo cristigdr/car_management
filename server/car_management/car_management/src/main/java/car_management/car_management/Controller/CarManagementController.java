@@ -7,10 +7,12 @@ import car_management.car_management.Repository.Vehicle;
 import car_management.car_management.Service.CarManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +45,16 @@ public class CarManagementController {
     @GetMapping("/findOwner/{owner}")
     public ResponseEntity<List <Vehicle>> getVehiclesByOwner(@PathVariable("owner") String  owner) {
         List<Vehicle> vehicles= carService.findByOwner(owner);
+        if (vehicles != null) {
+            return ResponseEntity.ok(vehicles);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/showAfterRegDate/{date}")
+    public ResponseEntity<List <Vehicle>> showVehiclesAfterRegDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-dd-MM") Date date) {
+        List<Vehicle> vehicles= carService.showVehiclesAfterRegDate(date);
         if (vehicles != null) {
             return ResponseEntity.ok(vehicles);
         } else {

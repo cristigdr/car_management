@@ -4,6 +4,7 @@ import car_management.car_management.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,6 +47,10 @@ public class CarManagementService {
 
     public List <Vehicle> findByOwner(String owner){
         return vehicleRepository.findByOwner(owner);
+    }
+
+    public List <Vehicle> showVehiclesAfterRegDate(Date date){
+        return vehicleRepository.findByRegistrationDateGreaterThanEqual(date);
     }
 
 
