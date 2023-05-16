@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CarManagementService {
@@ -138,6 +139,40 @@ public class CarManagementService {
         }catch (Exception e){
             return "Failed o delete user with id" + id;
         }
+    }
+
+    public String generateCode(String countyAbreviation) {
+
+        final String ALPHABET = "ABCDEFGHIJKLMNOPRSTUVWXYZ";
+        final int NUM_DIGITS = 2;
+        final int NUM_LETTERS = 3;
+
+        StringBuilder code = new StringBuilder();
+        Random random = new Random();
+
+        code.append(countyAbreviation).append(" ");
+
+        for (int i = 0; i < NUM_DIGITS; i++) {
+            int digit = random.nextInt(10);
+            code.append(digit);
+        }
+
+        code.append(" ");
+
+        for (int i = 0; i < NUM_LETTERS; i++) {
+            int letterIndex = random.nextInt(ALPHABET.length());
+            char letter = ALPHABET.charAt(letterIndex);
+            code.append(letter);
+        }
+
+        String generatedCode = code.toString();
+
+        Vehicle vehicle = vehicleRepository.findByplateNumber(generatedCode);
+
+        if(vehicle != null){
+            generateCode(countyAbreviation);
+        }
+        return generatedCode;
     }
 }
 

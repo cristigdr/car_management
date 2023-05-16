@@ -8,7 +8,9 @@ import car_management.car_management.Service.CarManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,6 +108,18 @@ public class CarManagementController {
     public ResponseEntity<List<Vehicle>> sortVehiclesByType() {
         List<Vehicle> vehicles = carService.sortByType();
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
+    }
+
+    @GetMapping("/generatePlateNr/{county}")
+    public ResponseEntity<String> generatePlateNr(@PathVariable("county") String county) {
+        String generatedCode = carService.generateCode(county);
+
+        String responseBody = "{\"generatedCode\": \"" + generatedCode + "\"}";
+
+        // Set the appropriate headers and return the ResponseEntity
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
 
     @PostMapping("/insert")
