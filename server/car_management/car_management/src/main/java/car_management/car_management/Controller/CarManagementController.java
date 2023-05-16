@@ -92,6 +92,16 @@ public class CarManagementController {
         }
     }
 
+    @PutMapping("/updateTechData/{id}")
+    public ResponseEntity<TechData> updateTechData(@PathVariable("id") Long vehicleId, @RequestBody TechData techData) {
+        TechData updatedTechData = carService.updateTechData(vehicleId, techData);
+        if (updatedTechData != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedTechData);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     private <T> T convertToObject(Object object, Class<T> objectType) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(object, objectType);

@@ -76,5 +76,18 @@ public class CarManagementService {
         }
         return null;
     }
+
+    public TechData updateTechData(Long vehicleId, TechData updatedTechData) {
+        TechData existingTechData = techDataRepository.findByVehicleId(vehicleId);
+
+
+        existingTechData.setFuelType(updatedTechData.getFuelType());
+        existingTechData.setConsumption(updatedTechData.getConsumption());
+        existingTechData.setPower(updatedTechData.getPower());
+        existingTechData.setEngineDisplacement(updatedTechData.getEngineDisplacement());
+        existingTechData.setNrCylinders(updatedTechData.getNrCylinders());
+
+        return techDataRepository.save(existingTechData);
+    }
 }
 
