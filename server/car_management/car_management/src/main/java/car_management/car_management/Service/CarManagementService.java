@@ -33,5 +33,16 @@ public class CarManagementService {
         techDataRepository.save(techData);
         reviewRepository.save(review);
     }
+
+    public String addReviewToVehicle(Long vehicleId, Review review) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
+        if (vehicle != null) {
+            review.setVehicle(vehicle);
+            reviewRepository.save(review);
+            return "Review added successfully.";
+        } else {
+            return "Error: Vehicle not found.";
+        }
+    }
 }
 

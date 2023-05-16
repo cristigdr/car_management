@@ -30,15 +30,22 @@ public class GeneralData {
 
     @Getter
     @Setter
+    @Column(name = "manufacturing_year", nullable = false, length = 4)
+    private Integer yearManuf;
+
+    @Getter
+    @Setter
     @OneToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     public GeneralData() {}
-    public GeneralData(String color, Integer nrSeats, Integer nrDoors, Vehicle vehicle) {
+
+    public GeneralData(String color, Integer nrSeats, Integer nrDoors, Integer yearManuf, Vehicle vehicle) {
         this.color = color;
         this.nrSeats = nrSeats;
         this.nrDoors = nrDoors;
+        this.yearManuf = yearManuf;
         this.vehicle = vehicle;
     }
 }
