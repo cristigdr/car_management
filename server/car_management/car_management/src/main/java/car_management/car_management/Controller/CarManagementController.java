@@ -30,6 +30,36 @@ public class CarManagementController {
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
+    @GetMapping("/getTechData/{id}")
+    public ResponseEntity<TechData> getTechDataByVehicleId(@PathVariable("id") Long vehicleId) {
+        TechData techData = carService.getTechDataByVehicleId(vehicleId);
+        if (techData != null) {
+            return ResponseEntity.ok(techData);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getReviews/{id}")
+    public ResponseEntity<List<Review>> getReviewsByVehicleId(@PathVariable("id") Long vehicleId) {
+        List<Review> reviews = carService.getReviewsByVehicleId(vehicleId);
+        if (!reviews.isEmpty()) {
+            return ResponseEntity.ok(reviews);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getGeneralData/{id}")
+    public ResponseEntity<GeneralData> getGeneralDataByVehicleId(@PathVariable("id") Long vehicleId) {
+        GeneralData generalData = carService.getGeneralDataByVehicleId(vehicleId);
+        if (generalData != null) {
+            return ResponseEntity.ok(generalData);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/insert")
     public ResponseEntity<String> registerVehicle(@RequestBody Map<String, Object> requestMap) {
         Vehicle vehicle = convertToObject(requestMap.get("vehicle"), Vehicle.class);

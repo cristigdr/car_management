@@ -26,6 +26,18 @@ public class CarManagementService {
         return (List<Vehicle>) vehicleRepository.findAll();
     } //finAll returns an Iterable, that's why we cast the return to List
 
+    public TechData getTechDataByVehicleId(Long vehicleId) {
+        return techDataRepository.findByVehicleId(vehicleId);
+    }
+
+    public List<Review> getReviewsByVehicleId(Long vehicleId) {
+        return reviewRepository.findByVehicleId(vehicleId);
+    }
+
+    public GeneralData getGeneralDataByVehicleId(Long vehicleId) {
+        return generalDataRepo.findByVehicleId(vehicleId);
+    }
+
     public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
 
         vehicle.setTechData(techData);

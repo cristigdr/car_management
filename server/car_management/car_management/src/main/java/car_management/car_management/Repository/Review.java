@@ -1,5 +1,6 @@
 package car_management.car_management.Repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class Review {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id")
+    @JsonIgnore
     private Vehicle vehicle;
 
     @Getter
