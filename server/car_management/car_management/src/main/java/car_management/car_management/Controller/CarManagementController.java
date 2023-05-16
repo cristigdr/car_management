@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 public class CarManagementController {
-    private CarManagementService carService;
+    private final CarManagementService carService;
 
     @Autowired
     public CarManagementController(CarManagementService carService){
@@ -40,6 +40,15 @@ public class CarManagementController {
         }
     }
 
+    @GetMapping("/findOwner/{owner}")
+    public ResponseEntity<List <Vehicle>> getVehiclesByOwner(@PathVariable("owner") String  owner) {
+        List<Vehicle> vehicles= carService.findByOwner(owner);
+        if (vehicles != null) {
+            return ResponseEntity.ok(vehicles);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/getTechData/{id}")
     public ResponseEntity<TechData> getTechDataByVehicleId(@PathVariable("id") Long vehicleId) {

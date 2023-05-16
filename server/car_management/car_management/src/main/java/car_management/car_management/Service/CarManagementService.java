@@ -44,7 +44,9 @@ public class CarManagementService {
         return vehicleRepository.findByplateNumber(plateNumber);
     }
 
-
+    public List <Vehicle> findByOwner(String owner){
+        return vehicleRepository.findByOwner(owner);
+    }
 
 
     public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {

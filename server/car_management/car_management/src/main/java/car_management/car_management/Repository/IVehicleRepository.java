@@ -9,4 +9,5 @@ import java.util.List;
 public interface IVehicleRepository extends CrudRepository<Vehicle, Long> {
 
     Vehicle findByplateNumber(String plateNumber);
+    List<Vehicle> findByOwner(String owner);
 }
