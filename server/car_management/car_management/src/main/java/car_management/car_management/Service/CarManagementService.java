@@ -62,5 +62,19 @@ public class CarManagementService {
             return "Error: Vehicle not found.";
         }
     }
+
+    public Vehicle updateVehicle(Vehicle updatedVehicle){
+        Vehicle existingVehicle = vehicleRepository.findById(updatedVehicle.getId()).orElse(null);
+
+        if(existingVehicle != null){
+            existingVehicle.setVehicleType(updatedVehicle.getVehicleType());
+            existingVehicle.setBrand(updatedVehicle.getBrand());
+            existingVehicle.setPlateNumber(updatedVehicle.getPlateNumber());
+            existingVehicle.setRegistrationDate(updatedVehicle.getRegistrationDate());
+            existingVehicle.setOwner(updatedVehicle.getOwner());
+            return vehicleRepository.save(existingVehicle);
+        }
+        return null;
+    }
 }
 

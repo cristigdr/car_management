@@ -6,7 +6,6 @@ import car_management.car_management.Repository.TechData;
 import car_management.car_management.Repository.Vehicle;
 import car_management.car_management.Service.CarManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +78,17 @@ public class CarManagementController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         } else {
             return ResponseEntity.ok(result);
+        }
+    }
+
+
+    @PutMapping("/updateVehicle")
+    public ResponseEntity<Vehicle> updateVehicle(@RequestBody Vehicle vehicle) {
+        Vehicle updatedVehicle = carService.updateVehicle(vehicle);
+        if (updatedVehicle != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedVehicle);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
