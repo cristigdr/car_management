@@ -102,6 +102,12 @@ public class CarManagementController {
         }
     }
 
+    @GetMapping("/sortByType")
+    public ResponseEntity<List<Vehicle>> sortVehiclesByType() {
+        List<Vehicle> vehicles = carService.sortByType();
+        return new ResponseEntity<>(vehicles, HttpStatus.OK);
+    }
+
     @PostMapping("/insert")
     public ResponseEntity<String> registerVehicle(@RequestBody Map<String, Object> requestMap) {
         Vehicle vehicle = convertToObject(requestMap.get("vehicle"), Vehicle.class);

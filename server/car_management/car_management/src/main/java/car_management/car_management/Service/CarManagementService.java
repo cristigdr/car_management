@@ -57,6 +57,9 @@ public class CarManagementService {
         return vehicleRepository.findVehiclesWithLastReviewBeforeDate(date);
     }
 
+    public List <Vehicle> sortByType(){
+        return vehicleRepository.findByOrderByVehicleType();
+    }
 
     public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
 

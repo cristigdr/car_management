@@ -22,4 +22,5 @@ public interface IVehicleRepository extends CrudRepository<Vehicle, Long> {
             "HAVING MAX(r.reviewDate) < :givenDate)")
     List<Vehicle> findVehiclesWithLastReviewBeforeDate(Date givenDate);
 
+    List<Vehicle> findByOrderByVehicleType();
 }
