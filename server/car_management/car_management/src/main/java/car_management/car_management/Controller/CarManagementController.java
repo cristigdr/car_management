@@ -102,6 +102,16 @@ public class CarManagementController {
         }
     }
 
+    @PutMapping("/updateGenData/{id}")
+    public ResponseEntity<GeneralData> updateGenData(@PathVariable("id") Long vehicleId, @RequestBody GeneralData generalData) {
+        GeneralData updatedgenData = carService.updateGeneralData(vehicleId, generalData);
+        if (updatedgenData != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedgenData);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     private <T> T convertToObject(Object object, Class<T> objectType) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(object, objectType);

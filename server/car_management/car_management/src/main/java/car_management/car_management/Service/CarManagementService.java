@@ -80,6 +80,9 @@ public class CarManagementService {
     public TechData updateTechData(Long vehicleId, TechData updatedTechData) {
         TechData existingTechData = techDataRepository.findByVehicleId(vehicleId);
 
+        if (existingTechData == null) {
+            return null;
+        }
 
         existingTechData.setFuelType(updatedTechData.getFuelType());
         existingTechData.setConsumption(updatedTechData.getConsumption());
@@ -88,6 +91,21 @@ public class CarManagementService {
         existingTechData.setNrCylinders(updatedTechData.getNrCylinders());
 
         return techDataRepository.save(existingTechData);
+    }
+
+    public GeneralData updateGeneralData(Long vehicleId, GeneralData updatedGenData) {
+        GeneralData existingGenData = generalDataRepo.findByVehicleId(vehicleId);
+
+        if (existingGenData == null) {
+            return null;
+        }
+
+        existingGenData.setYearManuf(updatedGenData.getYearManuf());
+        existingGenData.setColor(updatedGenData.getColor());
+        existingGenData.setNrDoors(updatedGenData.getNrDoors());
+        existingGenData.setNrSeats(updatedGenData.getNrSeats());
+
+        return generalDataRepo.save(existingGenData);
     }
 }
 
