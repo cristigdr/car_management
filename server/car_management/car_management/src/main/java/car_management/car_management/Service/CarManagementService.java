@@ -10,21 +10,25 @@ public class CarManagementService {
     private ITechDataRepository techDataRepository;
     private IReviewRepository reviewRepository;
 
+    private IGeneralData generalDataRepo;
+
     @Autowired
-    public CarManagementService(IVehicleRepository vehicleRepository, ITechDataRepository techDataRepository, IReviewRepository reviewRepository) {
+    public CarManagementService(IVehicleRepository vehicleRepository, ITechDataRepository techDataRepository, IReviewRepository reviewRepository, IGeneralData generalDataRepo) {
         this.vehicleRepository = vehicleRepository;
         this.techDataRepository = techDataRepository;
         this.reviewRepository = reviewRepository;
+        this.generalDataRepo = generalDataRepo;
     }
 
-    public void insertVehicleWithTechDataAndReview(Vehicle vehicle, TechData techData, Review review) {
-        // Set relationships between entities
+    public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
+
         vehicle.setTechData(techData);
         vehicle.getReviews().add(review);
+        vehicle.setGeneralData(generalData);
         techData.setVehicle(vehicle);
         review.setVehicle(vehicle);
+        generalData.setVehicle(vehicle);
 
-        // Save entities to the database
         vehicleRepository.save(vehicle);
         techDataRepository.save(techData);
         reviewRepository.save(review);

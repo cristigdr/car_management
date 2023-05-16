@@ -33,20 +33,6 @@ public class Vehicle {
     @Column(name = "manufacturing_year", nullable = false, length = 4)
     private Integer yearManuf;
 
-    @Getter
-    @Setter
-    @Column(name = "color", nullable = false, length = 50)
-    private String color;
-
-    @Getter
-    @Setter
-    @Column(name = "number_seats", nullable = false, length = 2)
-    private Integer nrSeats;
-
-    @Getter
-    @Setter
-    @Column(name = "number_doors", nullable = false, length = 1)
-    private Integer nrDoors;
 
     @Getter
     @Setter
@@ -57,6 +43,11 @@ public class Vehicle {
     @Setter
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     private TechData techData;
+
+    @Getter
+    @Setter
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private GeneralData generalData;
 
     @Getter
     @Setter
@@ -73,15 +64,13 @@ public class Vehicle {
     @Column(name = "owner", nullable = false, length = 100)
     private String owner;
 
-    public Vehicle(String vehicleType, String brand, Integer yearManuf, String color, Integer nrSeats, Integer nrDoors, List<Review> reviews, TechData techData, String plateNumber, Date registrationDate, String owner) {
+    public Vehicle(String vehicleType, String brand, Integer yearManuf, List<Review> reviews, TechData techData, GeneralData generalData, String plateNumber, Date registrationDate, String owner) {
         this.vehicleType = vehicleType;
         this.brand = brand;
         this.yearManuf = yearManuf;
-        this.color = color;
-        this.nrSeats = nrSeats;
-        this.nrDoors = nrDoors;
         this.reviews = reviews;
         this.techData = techData;
+        this.generalData = generalData;
         this.plateNumber = plateNumber;
         this.registrationDate = registrationDate;
         this.owner = owner;

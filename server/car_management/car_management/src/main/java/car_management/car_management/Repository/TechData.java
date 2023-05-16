@@ -13,27 +13,27 @@ public class TechData {
 
     @Getter
     @Setter
-    @Column(name = "fuel_type", nullable = false, unique = true,length = 50)
+    @Column(name = "fuel_type", nullable = false,length = 50)
     private String fuelType;
 
     @Getter
     @Setter
-    @Column(name = "consumption", nullable = false, unique = true,length = 3)
+    @Column(name = "consumption", nullable = false,length = 3)
     private Float consumption;
 
     @Getter
     @Setter
-    @Column(name = "power", nullable = false, unique = true,length = 4)
+    @Column(name = "power", nullable = false,length = 4)
     private Integer power;
 
     @Getter
     @Setter
-    @Column(name = "engine_displacement", nullable = false, unique = true,length = 5)
+    @Column(name = "engine_displacement", nullable = false,length = 5)
     private Float engineDisplacement;
 
     @Getter
     @Setter
-    @Column(name = "cylinder_number", nullable = false, unique = true,length = 2)
+    @Column(name = "cylinder_number", nullable = false,length = 2)
     private Integer nrCylinders;
 
     @Getter
