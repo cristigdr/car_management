@@ -62,6 +62,16 @@ public class CarManagementController {
         }
     }
 
+    @GetMapping("/showBeforeLastReview/{date}")
+    public ResponseEntity<List <Vehicle>> showVehiclesBeforeLastReviewDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-dd-MM") Date date) {
+        List<Vehicle> vehicles= carService.showVehiclesWithLastReviewBeforeDate(date);
+        if (vehicles != null) {
+            return ResponseEntity.ok(vehicles);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/getTechData/{id}")
     public ResponseEntity<TechData> getTechDataByVehicleId(@PathVariable("id") Long vehicleId) {
         TechData techData = carService.getTechDataByVehicleId(vehicleId);

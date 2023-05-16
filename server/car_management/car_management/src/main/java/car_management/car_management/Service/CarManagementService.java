@@ -53,6 +53,10 @@ public class CarManagementService {
         return vehicleRepository.findByRegistrationDateGreaterThanEqual(date);
     }
 
+    public List <Vehicle> showVehiclesWithLastReviewBeforeDate(Date date){
+        return vehicleRepository.findVehiclesWithLastReviewBeforeDate(date);
+    }
+
 
     public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
 
