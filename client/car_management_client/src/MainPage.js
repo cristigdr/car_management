@@ -32,6 +32,9 @@ export default function MainPage(){
     const[techData, setTechData] = useState([]);
     const[genData, setGenData] = useState([]);
     const[inspections, setInspections] = useState([]);
+    const[addInspectionData, setAddInspectionData] = useState({
+        reviewDate: "",
+    });
 
     const toggleTechData = (vehicleId) => {
         const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
@@ -39,13 +42,13 @@ export default function MainPage(){
         setModalTechData(!modalTechData)
     };
     const toggleGenData = (vehicleId) => {
-        const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
+        const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId;
         setSelectedVehicleId(id)
         setModalGenData(!modalGenData);
     }
 
     const toggleInspections = (vehicleId) => {
-        const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
+        const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId;
         setSelectedVehicleId(id)
         setModalInspections(!modalInspections);
     }
@@ -104,6 +107,16 @@ export default function MainPage(){
             }
         }fetchGenData();
     }, [selectedVehicleId]);
+
+    const addInspection = async () => {
+        try {
+            const response = await httpClient.post(`http://localhost:8080/addReview/${selectedVehicleId}`, addInspectionData);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     return(
         <div>
@@ -393,10 +406,13 @@ export default function MainPage(){
 
                     </ModalBody>
 
-                    <ModalFooter style={{display: "flex", justifyContent: "center"}}>
+                    <ModalFooter style={{display: "flex", justifyContent: "center",flexDirection: "row"}}>
 
-                        <Button color="primary" onClick={toggleInspections}>
-                            Update
+                        <input id="reviewDate" type="date"  onChange={(e) => setAddInspectionData({ ...addInspectionData, reviewDate: e.target.value })}
+                        />
+
+                        <Button color="primary" onClick={addInspection}>
+                            Add Inspection
                         </Button>{' '}
 
                     </ModalFooter>

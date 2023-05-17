@@ -57,7 +57,7 @@ public class Vehicle {
     @Getter
     @Setter
     @Column(name = "registration_date", nullable = false, length = 4)
-    @JsonFormat(pattern = "yyyy-dd-MM")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date registrationDate;
 
     @Getter

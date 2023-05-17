@@ -25,7 +25,7 @@ public class Review {
     @Getter
     @Setter
     @Column(name = "review_date", nullable = false, length = 4)
-    @JsonFormat(pattern = "yyyy-dd-MM")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date reviewDate;
 
     public Review() {}
