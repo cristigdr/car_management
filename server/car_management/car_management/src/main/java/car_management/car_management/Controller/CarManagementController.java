@@ -8,9 +8,7 @@ import car_management.car_management.Service.CarManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +26,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/getVehicles")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List<Vehicle>> getAllVehicles() {
         List<Vehicle> vehicles = carService.getVehicles();
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
@@ -35,6 +34,7 @@ public class CarManagementController {
 
 
     @GetMapping("/findPlateNr/{plateNr}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<Vehicle> getVehicleByPlateNr(@PathVariable("plateNr") String  plateNr) {
         Vehicle vehicle = carService.findByPlateNr(plateNr);
         if (vehicle != null) {
@@ -45,6 +45,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/findOwner/{owner}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List <Vehicle>> getVehiclesByOwner(@PathVariable("owner") String  owner) {
         List<Vehicle> vehicles= carService.findByOwner(owner);
         if (vehicles != null) {
@@ -55,6 +56,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/showAfterRegDate/{date}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List <Vehicle>> showVehiclesAfterRegDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-dd-MM") Date date) {
         List<Vehicle> vehicles= carService.showVehiclesAfterRegDate(date);
         if (vehicles != null) {
@@ -65,6 +67,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/showBeforeLastReview/{date}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List <Vehicle>> showVehiclesBeforeLastReviewDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-dd-MM") Date date) {
         List<Vehicle> vehicles= carService.showVehiclesWithLastReviewBeforeDate(date);
         if (vehicles != null) {
@@ -75,6 +78,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/getTechData/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<TechData> getTechDataByVehicleId(@PathVariable("id") Long vehicleId) {
         TechData techData = carService.getTechDataByVehicleId(vehicleId);
         if (techData != null) {
@@ -85,6 +89,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/getReviews/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List<Review>> getReviewsByVehicleId(@PathVariable("id") Long vehicleId) {
         List<Review> reviews = carService.getReviewsByVehicleId(vehicleId);
         if (!reviews.isEmpty()) {
@@ -95,6 +100,7 @@ public class CarManagementController {
     }
 
     @GetMapping("/getGeneralData/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<GeneralData> getGeneralDataByVehicleId(@PathVariable("id") Long vehicleId) {
         GeneralData generalData = carService.getGeneralDataByVehicleId(vehicleId);
         if (generalData != null) {
@@ -105,24 +111,25 @@ public class CarManagementController {
     }
 
     @GetMapping("/sortByType")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List<Vehicle>> sortVehiclesByType() {
         List<Vehicle> vehicles = carService.sortByType();
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
     @GetMapping("/generatePlateNr/{county}")
+    @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<String> generatePlateNr(@PathVariable("county") String county) {
         String generatedCode = carService.generateCode(county);
 
         String responseBody = "{\"generatedCode\": \"" + generatedCode + "\"}";
 
-        // Set the appropriate headers and return the ResponseEntity
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @PostMapping("/insert")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<String> registerVehicle(@RequestBody Map<String, Object> requestMap) {
         Vehicle vehicle = convertToObject(requestMap.get("vehicle"), Vehicle.class);
         TechData techData = convertToObject(requestMap.get("techData"), TechData.class);
@@ -135,6 +142,7 @@ public class CarManagementController {
     }
 
     @PostMapping("/addReview/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<String> addReview(@PathVariable("id") Long vehicleId, @RequestBody Review review) {
         String result = carService.addReviewToVehicle(vehicleId, review);
         if (result.startsWith("Error")) {
@@ -146,6 +154,7 @@ public class CarManagementController {
 
 
     @PutMapping("/updateVehicle")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<Vehicle> updateVehicle(@RequestBody Vehicle vehicle) {
         Vehicle updatedVehicle = carService.updateVehicle(vehicle);
         if (updatedVehicle != null) {
@@ -156,6 +165,7 @@ public class CarManagementController {
     }
 
     @PutMapping("/updateTechData/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<TechData> updateTechData(@PathVariable("id") Long vehicleId, @RequestBody TechData techData) {
         TechData updatedTechData = carService.updateTechData(vehicleId, techData);
         if (updatedTechData != null) {
@@ -166,6 +176,7 @@ public class CarManagementController {
     }
 
     @PutMapping("/updateGenData/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<GeneralData> updateGenData(@PathVariable("id") Long vehicleId, @RequestBody GeneralData generalData) {
         GeneralData updatedgenData = carService.updateGeneralData(vehicleId, generalData);
         if (updatedgenData != null) {
@@ -176,6 +187,7 @@ public class CarManagementController {
     }
 
     @DeleteMapping("/deleteVehicle/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public String deleteVehicle(@PathVariable("id") Long vehicleId){return this.carService.deleteVehicle(vehicleId);}
 
     private <T> T convertToObject(Object object, Class<T> objectType) {

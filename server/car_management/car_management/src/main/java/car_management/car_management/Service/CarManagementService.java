@@ -10,11 +10,11 @@ import java.util.Random;
 
 @Service
 public class CarManagementService {
-    private IVehicleRepository vehicleRepository;
-    private ITechDataRepository techDataRepository;
-    private IReviewRepository reviewRepository;
+    private final IVehicleRepository vehicleRepository;
+    private final ITechDataRepository techDataRepository;
+    private final IReviewRepository reviewRepository;
 
-    private IGeneralData generalDataRepo;
+    private final IGeneralData generalDataRepo;
 
     @Autowired
     public CarManagementService(IVehicleRepository vehicleRepository, ITechDataRepository techDataRepository, IReviewRepository reviewRepository, IGeneralData generalDataRepo) {
