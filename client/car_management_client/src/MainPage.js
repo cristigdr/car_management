@@ -29,14 +29,18 @@ export default function MainPage(){
     const [modalGenData, setModalGenData] = useState(false);
     const[selectedVehicleId, setSelectedVehicleId] = useState('');
     const[techData, setTechData] = useState([]);
-
+    const[genData, setGenData] = useState([]);
 
     const toggleTechData = (vehicleId) => {
         const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
         setSelectedVehicleId(id)
         setModalTechData(!modalTechData)
     };
-    const toggleGenData = () => setModalGenData(!modalGenData);
+    const toggleGenData = (vehicleId) => {
+        const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
+        setSelectedVehicleId(id)
+        setModalGenData(!modalGenData);
+    }
 
 
     useEffect( () =>{
@@ -51,6 +55,7 @@ export default function MainPage(){
         fetchAllVehicles();
     }, []);
 
+
     useEffect(() => {
         async function fetchTechData(){
             try {
@@ -63,6 +68,20 @@ export default function MainPage(){
 
             }
         }fetchTechData();
+    }, [selectedVehicleId]);
+
+    useEffect(() => {
+        async function fetchGenData(){
+            try {
+                const response = await httpClient.get(`http://localhost:8080/getGeneralData/${selectedVehicleId}`);
+                setGenData(response.data);
+
+
+            } catch (error) {
+                console.error(error);
+
+            }
+        }fetchGenData();
     }, [selectedVehicleId]);
 
     return(
@@ -131,7 +150,7 @@ export default function MainPage(){
                             <td>
                                 <div className="icons">
                                     <FontAwesomeIcon icon={faGear} size="lg" title="Technical Data" style={{cursor: "pointer"}}   onClick={() => toggleTechData(vehicle.id)}/>
-                                    <FontAwesomeIcon icon={faCircleInfo} size="lg" title="General Data" style={{cursor: "pointer"}} onClick={toggleGenData}/>
+                                    <FontAwesomeIcon icon={faCircleInfo} size="lg" title="General Data" style={{cursor: "pointer"}} onClick={() => toggleGenData(vehicle.id)}/>
                                     <FontAwesomeIcon icon={faToolbox} size="lg" title="Inspection History" style={{cursor: "pointer"}}/>
                                 </div>
                             </td>
@@ -154,14 +173,13 @@ export default function MainPage(){
                     style={{width: "fit-content"}}
                 >
                     <ModalHeader toggle={toggleTechData}>Technical Data for vehicle id {selectedVehicleId}</ModalHeader>
-                    <ModalBody >
+                    <ModalBody style={{display: "flex", justifyContent: "center"}}>
 
                         <Card
                             style={{
                                 width: '18rem'
                             }}
                         >
-
 
                             <ListGroup flush>
 
@@ -234,11 +252,13 @@ export default function MainPage(){
                         </Card>
 
                     </ModalBody>
-                    <ModalFooter>
+
+                    <ModalFooter style={{display: "flex", justifyContent: "center"}}>
                         <Button color="primary" onClick={toggleTechData}>
                             Update
-                        </Button>{' '}
+                        </Button>
                     </ModalFooter>
+
                 </Modal>
             </div>
 
@@ -246,19 +266,82 @@ export default function MainPage(){
                 <Modal
                     isOpen={modalGenData}
                     toggle={toggleGenData}
+                    style={{width: "fit-content"}}
                 >
-                    <ModalHeader toggle={toggleGenData}>General Data</ModalHeader>
-                    <ModalBody>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                    <ModalHeader toggle={toggleGenData}>General Data for vehicle id {selectedVehicleId}</ModalHeader>
+                    <ModalBody style={{display: "flex", justifyContent: "center"}}>
+                        <Card
+                            style={{
+                                width: '18rem'
+                            }}
+                        >
+
+                            <ListGroup flush>
+
+                                <FormGroup floating>
+                                    <Input
+                                        id="manufYear"
+                                        name="manufYear"
+                                        type="text"
+                                        defaultValue={genData.yearManuf}
+                                    />
+                                    <Label for="manufYear">
+                                        Manufacturing Year
+                                    </Label>
+                                </FormGroup>
+
+                                <FormGroup floating>
+                                    <Input
+                                        id="vehColor"
+                                        name="vehColor"
+                                        placeholder="vehColor"
+                                        type="text"
+                                        defaultValue={genData.color}
+                                    />
+                                    <Label for="vehColor">
+                                        Color
+                                    </Label>
+                                </FormGroup>
+
+                                <FormGroup floating>
+                                    <Input
+                                        id="nrSeats"
+                                        name="nrSeats"
+                                        placeholder="nrSeats"
+                                        type="text"
+                                        defaultValue={genData.nrSeats}
+                                    />
+                                    <Label for="nrSeats">
+                                        Number of Seats
+                                    </Label>
+                                </FormGroup>
+
+                                <FormGroup floating>
+                                    <Input
+                                        id="nrDoors"
+                                        name="nrDoors"
+                                        placeholder="nrDoors"
+                                        type="text"
+                                        defaultValue={genData.nrDoors}
+                                    />
+                                    <Label for="nrDoors">
+                                        Number of Doors
+                                    </Label>
+                                </FormGroup>
+
+
+                            </ListGroup>
+
+                        </Card>
 
                     </ModalBody>
-                    <ModalFooter>
+
+                    <ModalFooter style={{display: "flex", justifyContent: "center"}}>
+
                         <Button color="primary" onClick={toggleGenData}>
-                            Do Something
+                            Update
                         </Button>{' '}
-                        <Button color="secondary" onClick={toggleGenData}>
-                            Cancel
-                        </Button>
+
                     </ModalFooter>
                 </Modal>
             </div>
