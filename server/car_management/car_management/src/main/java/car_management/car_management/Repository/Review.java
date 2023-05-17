@@ -1,5 +1,6 @@
 package car_management.car_management.Repository;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Review {
     @Getter
     @Setter
     @Column(name = "review_date", nullable = false, length = 4)
+    @JsonFormat(pattern = "yyyy-dd-MM")
     private Date reviewDate;
 
     public Review() {}

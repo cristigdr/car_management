@@ -3,7 +3,7 @@ import {
     Button,
     Card,
     FormGroup, Input, Label,
-    ListGroup,
+    ListGroup, ListGroupItem,
     Modal,
     ModalBody,
     ModalFooter,
@@ -27,9 +27,11 @@ export default function MainPage(){
     const[vehicles, setVehicles] = useState([]);
     const [modalTechData, setModalTechData] = useState(false);
     const [modalGenData, setModalGenData] = useState(false);
+    const [modalInspections, setModalInspections] = useState(false);
     const[selectedVehicleId, setSelectedVehicleId] = useState('');
     const[techData, setTechData] = useState([]);
     const[genData, setGenData] = useState([]);
+    const[inspections, setInspections] = useState([]);
 
     const toggleTechData = (vehicleId) => {
         const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
@@ -42,6 +44,11 @@ export default function MainPage(){
         setModalGenData(!modalGenData);
     }
 
+    const toggleInspections = (vehicleId) => {
+        const id = vehicleId && typeof vehicleId === "object" ? vehicleId.id : vehicleId; //daca vehicleId e object returneaza proprietatea de id din vehicleId
+        setSelectedVehicleId(id)
+        setModalInspections(!modalInspections);
+    }
 
     useEffect( () =>{
         async function fetchAllVehicles(){
@@ -68,6 +75,20 @@ export default function MainPage(){
 
             }
         }fetchTechData();
+    }, [selectedVehicleId]);
+
+    useEffect(() => {
+        async function fetchInspections(){
+            try {
+                const response = await httpClient.get(`http://localhost:8080/getReviews/${selectedVehicleId}`);
+                setInspections(response.data);
+
+
+            } catch (error) {
+                console.error(error);
+
+            }
+        }fetchInspections();
     }, [selectedVehicleId]);
 
     useEffect(() => {
@@ -151,7 +172,7 @@ export default function MainPage(){
                                 <div className="icons">
                                     <FontAwesomeIcon icon={faGear} size="lg" title="Technical Data" style={{cursor: "pointer"}}   onClick={() => toggleTechData(vehicle.id)}/>
                                     <FontAwesomeIcon icon={faCircleInfo} size="lg" title="General Data" style={{cursor: "pointer"}} onClick={() => toggleGenData(vehicle.id)}/>
-                                    <FontAwesomeIcon icon={faToolbox} size="lg" title="Inspection History" style={{cursor: "pointer"}}/>
+                                    <FontAwesomeIcon icon={faToolbox} size="lg" title="Inspection History" style={{cursor: "pointer"}} onClick={() => toggleInspections(vehicle.id)}/>
                                 </div>
                             </td>
                             <td>
@@ -339,6 +360,42 @@ export default function MainPage(){
                     <ModalFooter style={{display: "flex", justifyContent: "center"}}>
 
                         <Button color="primary" onClick={toggleGenData}>
+                            Update
+                        </Button>{' '}
+
+                    </ModalFooter>
+                </Modal>
+            </div>
+
+            <div id="inspections">
+                <Modal
+                    isOpen={modalInspections}
+                    toggle={toggleInspections}
+                    style={{width: "fit-content"}}
+                >
+                    <ModalHeader toggle={toggleInspections}>Inspection history for vehicle id {selectedVehicleId}</ModalHeader>
+                    <ModalBody style={{display: "flex", justifyContent: "center"}}>
+                        <Card
+                            style={{
+                                width: '18rem'
+                            }}
+                        >
+
+                            <ListGroup numbered>
+                                {inspections.map(inspection => (
+                                <ListGroupItem>
+                                    {inspection.reviewDate}
+                                </ListGroupItem>
+                                ))}
+                            </ListGroup>
+
+                        </Card>
+
+                    </ModalBody>
+
+                    <ModalFooter style={{display: "flex", justifyContent: "center"}}>
+
+                        <Button color="primary" onClick={toggleInspections}>
                             Update
                         </Button>{' '}
 
