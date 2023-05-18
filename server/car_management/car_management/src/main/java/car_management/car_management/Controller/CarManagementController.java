@@ -142,25 +142,25 @@ public class CarManagementController {
 
     @PostMapping("/insert")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<String> registerVehicle(@RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<Vehicle> registerVehicle(@RequestBody Map<String, Object> requestMap) {
         Vehicle vehicle = convertToObject(requestMap.get("vehicle"), Vehicle.class);
         TechData techData = convertToObject(requestMap.get("techData"), TechData.class);
         Review review = convertToObject(requestMap.get("review"), Review.class);
         GeneralData generalData = convertToObject(requestMap.get("generalData"), GeneralData.class);
 
-        carService.insertVehicleWithTechDataAndReviewAndGenData(vehicle, techData, review, generalData);
+        Vehicle newVehicle = carService.insertVehicleWithTechDataAndReviewAndGenData(vehicle, techData, review, generalData);
 
-        return ResponseEntity.ok("Data inserted successfully");
+        return ResponseEntity.ok(newVehicle);
     }
 
     @PostMapping("/addReview/{id}")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<String> addReview(@PathVariable("id") Long vehicleId, @RequestBody Review review) {
-        String result = carService.addReviewToVehicle(vehicleId, review);
-        if (result.startsWith("Error")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+    public ResponseEntity<Review> addReview(@PathVariable("id") Long vehicleId, @RequestBody Review review) {
+        Review savedReview = carService.addReviewToVehicle(vehicleId, review);
+        if (savedReview != null) {
+            return ResponseEntity.ok(savedReview);
         } else {
-            return ResponseEntity.ok(result);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

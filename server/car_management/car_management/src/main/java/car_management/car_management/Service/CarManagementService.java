@@ -65,7 +65,7 @@ public class CarManagementService {
         return vehicleRepository.findByOrderByVehicleType();
     }
 
-    public void insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
+    public Vehicle insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {
 
         vehicle.setTechData(techData);
         vehicle.getReviews().add(review);
@@ -74,21 +74,23 @@ public class CarManagementService {
         review.setVehicle(vehicle);
         generalData.setVehicle(vehicle);
 
-        vehicleRepository.save(vehicle);
+        Vehicle insertedVehicle = vehicleRepository.save(vehicle);
         techDataRepository.save(techData);
         reviewRepository.save(review);
+
+        return insertedVehicle;
     }
 
-    public String addReviewToVehicle(Long vehicleId, Review review) {
+    public Review addReviewToVehicle(Long vehicleId, Review review) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
         if (vehicle != null) {
             review.setVehicle(vehicle);
-            reviewRepository.save(review);
-            return "Review added successfully.";
+            return reviewRepository.save(review);
         } else {
-            return "Error: Vehicle not found.";
+            return null;
         }
     }
+
 
     public Vehicle updateVehicle(Vehicle updatedVehicle){
         Vehicle existingVehicle = vehicleRepository.findById(updatedVehicle.getId()).orElse(null);

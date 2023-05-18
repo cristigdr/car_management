@@ -6,14 +6,14 @@ import {
     faCircleInfo,
     faToolbox,
     faTrash,
-    faPen, faPlus
+    faPen, faPlus, faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal} from "bootstrap";
 
 export default function MainPage(){
 
-    const[vehicles, setVehicles] = useState([]);
+    const [vehicles, setVehicles] = useState([]);
     const[vehicleData, setVehicleData] = useState({
         id: "",
         owner: "",
@@ -144,6 +144,8 @@ export default function MainPage(){
         };
         try{
             const response = await httpClient.post(`http://localhost:8080/insert`, formData);
+            const newlyAddedVehicle = response.data;
+            setVehicles((prevVehicles) => [...prevVehicles, newlyAddedVehicle]);
         }catch (error){
             console.error(error);
         }
@@ -152,7 +154,8 @@ export default function MainPage(){
     const addInspection = async () => {
         try {
             const response = await httpClient.post(`http://localhost:8080/addReview/${selectedVehicleId}`, addInspectionData);
-            console.log(response.data);
+            const newReview = response.data;
+            setInspections(prevInspections => [...prevInspections, newReview]);
         } catch (error) {
             console.error(error);
         }
@@ -162,6 +165,15 @@ export default function MainPage(){
         try {
             const response = await httpClient.put(`http://localhost:8080/updateVehicle`, vehicleData);
             console.log(response.data);
+            setVehicles((prevVehicles) => {
+                const updatedVehicles = prevVehicles.map((vehicle) => {
+                    if (vehicle.id === vehicleData.id) {
+                        return response.data;
+                    }
+                    return vehicle;
+                });
+                return updatedVehicles;
+            });
         } catch (error) {
             console.error(error);
         }
@@ -171,6 +183,7 @@ export default function MainPage(){
         try {
             const response = await httpClient.put(`http://localhost:8080/updateTechData/${selectedVehicleId}`, techData);
             console.log(response.data);
+
         } catch (error) {
             console.error(error);
         }
@@ -257,8 +270,90 @@ export default function MainPage(){
         }
     };
 
+    const [plateNrInput, setPlateNrInput] = useState('');
+    async function searchByPlate(plateNr) {
+        try {
+            const response = await httpClient.get(`http://localhost:8080/findPlateNr/${plateNr}`);
+            const searchedVehicle = response.data;
+            setVehicles([searchedVehicle]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function searchByPlateOnClick(){
+        searchByPlate(plateNrInput);
+    }
+
+    const [ownerInput, setOwnerInput] = useState('');
+
+    async function searchByOwner(owner) {
+        try {
+            const response = await httpClient.get(`http://localhost:8080/findOwner/${owner}`);
+            const searchedVehicles = response.data;
+            setVehicles(searchedVehicles);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    function searchByOwnerOnClick(){
+        searchByOwner(ownerInput);
+    }
+
     return(
         <div>
+
+            <div id="searchForm">
+                <h1>Search Form</h1>
+
+                <div className='textSearch'>
+                    <div className="form-floating mb-3 grid-item">
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="plateNrSeacrh"
+                            placeholder="name@example.com"
+                            value={plateNrInput}
+                            onChange={(event) => setPlateNrInput(event.target.value)}
+                            required={true}
+                        />
+                        <label htmlFor="floatingInput"><strong>Plate Number</strong></label>
+                    </div>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{ color: "black",  cursor: 'pointer' }} onClick={searchByPlateOnClick}/>
+                </div>
+
+                <div className='textSearch'>
+                    <div className="form-floating mb-3 grid-item">
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="owner"
+                            placeholder="name@example.com"
+                            value={ownerInput}
+                            onChange={(event) => setOwnerInput(event.target.value)}
+                            required={true}
+                        />
+                        <label htmlFor="floatingInput"><strong>Owner</strong></label>
+                    </div>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{ color: "black",  cursor: 'pointer' }} onClick={searchByOwnerOnClick}/>
+                </div>
+
+                <div className="dateForm">
+                    <p><strong>Show vehicles with registration date after: </strong></p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input id="registrationDate" type="date"/>&nbsp;&nbsp;&nbsp;
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{color: "black", cursor: 'pointer'}}/>
+                </div>
+                    <br/>
+                <div className="dateForm">
+                    <p ><strong>Show vehicles with last inspection date before: </strong></p>
+                    <input id="registrationDate" type="date"/> &nbsp;&nbsp;&nbsp;
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{color: "black",  cursor: 'pointer'}}/>
+                </div>
+                <br/>
+            </div>
+
             <div id="tableVeh">
 
                 <table className="table table-hover">

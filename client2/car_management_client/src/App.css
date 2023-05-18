@@ -12,9 +12,39 @@ body{
   text-align: center;
 }
 
+#searchForm{
+  width: 39%;
+  margin: auto;
+  text-align: center;
+  margin-top: 2%;
+}
+
+
+
+#dateForm{
+  display: flex;
+  flex-direction: row;
+}
+
+.dateForm p {
+  display: inline;
+}
+
+
 .icons{
   display: flex;
   flex-direction: row;
   justify-content: center;
   gap: 15%;
+}
+
+.textSearch{
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 2%;
+  align-items: center;
+}
+
+.grid-item {
+  grid-column: span 9; /* Place the form in the first 4 columns */
 }
