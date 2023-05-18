@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -40,7 +41,9 @@ public class CarManagementService {
         return generalDataRepo.findByVehicleId(vehicleId);
     }
 
-
+    public Optional<Vehicle> getVehicleById(Long id){
+        return this.vehicleRepository.findById(id);
+    }
 
     public Vehicle findByPlateNr(String plateNumber){
         return vehicleRepository.findByplateNumber(plateNumber);

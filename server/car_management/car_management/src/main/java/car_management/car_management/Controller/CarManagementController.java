@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class CarManagementController {
@@ -94,6 +95,17 @@ public class CarManagementController {
         List<Review> reviews = carService.getReviewsByVehicleId(vehicleId);
         if (!reviews.isEmpty()) {
             return ResponseEntity.ok(reviews);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getVehicle/{id}")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    public ResponseEntity<Optional<Vehicle>> getVehicleById(@PathVariable("id") Long vehicleId) {
+        Optional<Vehicle> vehicle = carService.getVehicleById(vehicleId);
+        if (vehicle != null) {
+            return ResponseEntity.ok(vehicle);
         } else {
             return ResponseEntity.notFound().build();
         }
