@@ -13,9 +13,6 @@ import {Modal} from "bootstrap";
 
 export default function MainPage(){
 
-    const[registerData, setRegisterData] = useState({
-
-    })
     const[vehicles, setVehicles] = useState([]);
     const[vehicleData, setVehicleData] = useState({
         id: "",
@@ -44,7 +41,9 @@ export default function MainPage(){
         reviewDate: "",
     });
     const[county, setCounty] = useState([]);
-    const[plateNr, setPlateNr] = useState([]);
+    const[plateNr, setPlateNr] = useState({
+        generatedCode: "",
+    });
 
     useEffect( () =>{
         async function fetchAllVehicles(){
@@ -215,10 +214,39 @@ export default function MainPage(){
     };
 
     const toggleRegister = () => {
+        setVehicleData({id: "",
+            owner: "",
+            vehicleType: "",
+            brand: "",
+            plateNumber: "",
+            registrationDate: "",});
+        setTechData({
+            fuelType: "",
+            consumption: "",
+            power: "",
+            engineDisplacement: "",
+            nrCylinders: "",
+        });
+        setGenData({
+            yearManuf:"",
+            color:"",
+            nrSeats:"",
+            nrDoors:"",
+        });
+        setAddInspectionData({
+            reviewDate: "",
+        });
         const modalElement = document.getElementById("modalRegister");
         const modal = new Modal(modalElement);
         modal.show();
     };
+
+    useEffect(() => {
+        setVehicleData((prevData) => ({
+            ...prevData,
+            plateNumber: plateNr.generatedCode,
+        }));
+    }, [plateNr.generatedCode]);
     return(
         <div>
             <div id="tableVeh">
@@ -568,12 +596,64 @@ export default function MainPage(){
                                                    className="form-control"
                                                    id="plateNumber"
                                                    placeholder="name@example.com"
-                                                   value={vehicleData.plateNumber}
-                                                   onChange={(e) => setVehicleData({ ...vehicleData, plateNumber: e.target.value })}
+                                                   value={plateNr.generatedCode}
+                                                   onChange={(event) => {
+                                                       const generatedCode = event.target.value;
+                                                       setVehicleData((prevData) => ({
+                                                           ...prevData,
+                                                           plateNumber: generatedCode,
+                                                       }));
+                                                   }}
                                                    required={true}
+                                                   disabled={true}
                                             ></input>
                                             <label htmlFor="floatingInput"><strong>Plate Number</strong></label>
+
                                         </div>
+                                        <select name="counties" id="counties" onChange={handleCountyChange}>
+                                            <option value="AB">Alba</option>
+                                            <option value="AR">Arad</option>
+                                            <option value="AG">Argeș</option>
+                                            <option value="BC">Bacău</option>
+                                            <option value="BH">Bihor</option>
+                                            <option value="BN">Bistrița-Năsăud</option>
+                                            <option value="BT">Botoșani</option>
+                                            <option value="BV">Brașov</option>
+                                            <option value="BR">Brăila</option>
+                                            <option value="B">București</option>
+                                            <option value="BZ">Buzău</option>
+                                            <option value="CS">Caraș-Severin</option>
+                                            <option value="CL">Călărași</option>
+                                            <option value="CJ">Cluj</option>
+                                            <option value="CT">Constanța</option>
+                                            <option value="CV">Covasna</option>
+                                            <option value="DB">Dâmbovița</option>
+                                            <option value="DJ">Dolj</option>
+                                            <option value="GL">Galați</option>
+                                            <option value="GR">Giurgiu</option>
+                                            <option value="GJ">Gorj</option>
+                                            <option value="HR">Harghita</option>
+                                            <option value="HD">Hunedoara</option>
+                                            <option value="IL">Ialomița</option>
+                                            <option value="IS">Iași</option>
+                                            <option value="IF">Ilfov</option>
+                                            <option value="MM">Maramureș</option>
+                                            <option value="MH">Mehedinți</option>
+                                            <option value="MS">Mureș</option>
+                                            <option value="NT">Neamț</option>
+                                            <option value="OT">Olt</option>
+                                            <option value="PH">Prahova</option>
+                                            <option value="SM">Satu Mare</option>
+                                            <option value="SJ">Sălaj</option>
+                                            <option value="SB">Sibiu</option>
+                                            <option value="SV">Suceava</option>
+                                            <option value="TR">Teleorman</option>
+                                            <option value="TM">Timiș</option>
+                                            <option value="TL">Tulcea</option>
+                                            <option value="VS">Vaslui</option>
+                                            <option value="VL">Vâlcea</option>
+                                            <option value="VN">Vrancea</option>
+                                        </select>
                                     </li>
 
                                     <li className="list-group-item">
@@ -688,7 +768,13 @@ export default function MainPage(){
                                                                    id="plateNumber"
                                                                    placeholder="name@example.com"
                                                                    value={plateNr.generatedCode}
-                                                                   onChange={(e) => setVehicleData({ ...vehicleData, plateNumber: e.target.value })}
+                                                                   onChange={(event) => {
+                                                                       const generatedCode = event.target.value;
+                                                                       setVehicleData((prevData) => ({
+                                                                           ...prevData,
+                                                                           plateNumber: generatedCode,
+                                                                       }));
+                                                                   }}
                                                                    required={true}
                                                                    disabled={true}
                                                             ></input>
