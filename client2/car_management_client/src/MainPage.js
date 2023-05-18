@@ -6,13 +6,16 @@ import {
     faCircleInfo,
     faToolbox,
     faTrash,
-    faPen
+    faPen, faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal} from "bootstrap";
 
 export default function MainPage(){
 
+    const[registerData, setRegisterData] = useState({
+
+    })
     const[vehicles, setVehicles] = useState([]);
     const[vehicleData, setVehicleData] = useState({
         id: "",
@@ -40,7 +43,8 @@ export default function MainPage(){
     const[addInspectionData, setAddInspectionData] = useState({
         reviewDate: "",
     });
-
+    const[county, setCounty] = useState([]);
+    const[plateNr, setPlateNr] = useState([]);
 
     useEffect( () =>{
         async function fetchAllVehicles(){
@@ -83,6 +87,8 @@ export default function MainPage(){
         }fetchInspections();
     }, [selectedVehicleId]);
 
+
+
     useEffect(() => {
         async function fetchGenData(){
             try {
@@ -110,6 +116,39 @@ export default function MainPage(){
             }
         }fetchVehicle();
     }, [selectedVehicleId]);
+
+    useEffect(() => {
+        async function fetchPlateNr(){
+            try {
+                const response = await httpClient.get(`http://localhost:8080/generatePlateNr/${county}`);
+                setPlateNr(response.data);
+
+
+            } catch (error) {
+                console.error(error);
+
+            }
+        }fetchPlateNr();
+    }, [county]);
+
+    const handleCountyChange = (event) => {
+        const selectedCounty = event.target.value;
+        setCounty(selectedCounty);
+    };
+
+    const registerVehicle = async () =>{
+        const formData = {
+            vehicle: vehicleData,
+            techData: techData,
+            review: addInspectionData,
+            generalData: genData,
+        };
+        try{
+            const response = await httpClient.post(`http://localhost:8080/insert`, formData);
+        }catch (error){
+            console.error(error);
+        }
+    };
 
     const addInspection = async () => {
         try {
@@ -175,12 +214,25 @@ export default function MainPage(){
         modal.show();
     };
 
+    const toggleRegister = () => {
+        const modalElement = document.getElementById("modalRegister");
+        const modal = new Modal(modalElement);
+        modal.show();
+    };
     return(
         <div>
             <div id="tableVeh">
 
                 <table className="table table-hover">
-                <thead>
+
+                    <thead>
+
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                            <FontAwesomeIcon icon={faPlus} size="2xl" style={{ cursor: "pointer" }} onClick={toggleRegister}/>
+                            <span>Register</span>
+
+                        </div>
+
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Owner</th>
@@ -192,7 +244,9 @@ export default function MainPage(){
                             <th scope="col">Details</th>
                             <th scope="col">Operations</th>
                         </tr>
+
                     </thead>
+
                     <tbody>
                     {vehicles.map(vehicle => (
                         <tr key={vehicle.id}>
@@ -202,6 +256,7 @@ export default function MainPage(){
                             <td>{vehicle.brand}</td>
                             <td>{vehicle.plateNumber}</td>
                             <td>{vehicle.registrationDate}</td>
+
                             <td>...</td>
                             <td>
                                 <div className="icons">
@@ -327,7 +382,7 @@ export default function MainPage(){
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Technical Data for Vehicle Id {selectedVehicleId}</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">General Data for Vehicle Id {selectedVehicleId}</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
@@ -409,7 +464,7 @@ export default function MainPage(){
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Technical Data for Vehicle Id {selectedVehicleId}</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Inspection History for Vehicle Id {selectedVehicleId}</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
@@ -441,7 +496,7 @@ export default function MainPage(){
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Technical Data for Vehicle Id {selectedVehicleId}</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Update Vehicle Data for Vehicle Id {selectedVehicleId}</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
@@ -538,6 +593,364 @@ export default function MainPage(){
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="registerVehicle">
+
+                <div className="modal fade" id="modalRegister" tabIndex="-1" aria-labelledby="modalRegister"
+                     aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Register Vehicle</h1>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+
+                                <div class="accordion accordion-flush" id="accordionExample">
+
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="headingOne">
+                                            <button className="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseOne" aria-expanded="true"
+                                                    aria-controls="collapseOne">
+                                                Vehicle Data
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" className="accordion-collapse collapse show"
+                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                            <div className="accordion-body">
+
+                                                <ul className="list-group list-group-flush">
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="vehicleId"
+                                                                   placeholder="name@example.com"
+                                                                   value={vehicleData.id}
+                                                                   onChange={(e) => setVehicleData({ ...vehicleData, id: e.target.value })}
+                                                                   required={true}
+                                                                   disabled={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Id</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="owner"
+                                                                   placeholder="name@example.com"
+                                                                   value={vehicleData.owner}
+                                                                   onChange={(e) => setVehicleData({ ...vehicleData, owner: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Owner</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="vehicleType"
+                                                                   placeholder="name@example.com"
+                                                                   value={vehicleData.vehicleType}
+                                                                   onChange={(e) => setVehicleData({ ...vehicleData, vehicleType: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Vehicle Type</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="brand"
+                                                                   placeholder="name@example.com"
+                                                                   value={vehicleData.brand}
+                                                                   onChange={(e) => setVehicleData({ ...vehicleData, brand: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Brand</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="plateNumber"
+                                                                   placeholder="name@example.com"
+                                                                   value={plateNr.generatedCode}
+                                                                   onChange={(e) => setVehicleData({ ...vehicleData, plateNumber: e.target.value })}
+                                                                   required={true}
+                                                                   disabled={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Plate Number</strong></label>
+                                                        </div>
+
+                                                        <select name="counties" id="counties" onChange={handleCountyChange}>
+                                                            <option value="AB">Alba</option>
+                                                            <option value="AR">Arad</option>
+                                                            <option value="AG">Argeș</option>
+                                                            <option value="BC">Bacău</option>
+                                                            <option value="BH">Bihor</option>
+                                                            <option value="BN">Bistrița-Năsăud</option>
+                                                            <option value="BT">Botoșani</option>
+                                                            <option value="BV">Brașov</option>
+                                                            <option value="BR">Brăila</option>
+                                                            <option value="B">București</option>
+                                                            <option value="BZ">Buzău</option>
+                                                            <option value="CS">Caraș-Severin</option>
+                                                            <option value="CL">Călărași</option>
+                                                            <option value="CJ">Cluj</option>
+                                                            <option value="CT">Constanța</option>
+                                                            <option value="CV">Covasna</option>
+                                                            <option value="DB">Dâmbovița</option>
+                                                            <option value="DJ">Dolj</option>
+                                                            <option value="GL">Galați</option>
+                                                            <option value="GR">Giurgiu</option>
+                                                            <option value="GJ">Gorj</option>
+                                                            <option value="HR">Harghita</option>
+                                                            <option value="HD">Hunedoara</option>
+                                                            <option value="IL">Ialomița</option>
+                                                            <option value="IS">Iași</option>
+                                                            <option value="IF">Ilfov</option>
+                                                            <option value="MM">Maramureș</option>
+                                                            <option value="MH">Mehedinți</option>
+                                                            <option value="MS">Mureș</option>
+                                                            <option value="NT">Neamț</option>
+                                                            <option value="OT">Olt</option>
+                                                            <option value="PH">Prahova</option>
+                                                            <option value="SM">Satu Mare</option>
+                                                            <option value="SJ">Sălaj</option>
+                                                            <option value="SB">Sibiu</option>
+                                                            <option value="SV">Suceava</option>
+                                                            <option value="TR">Teleorman</option>
+                                                            <option value="TM">Timiș</option>
+                                                            <option value="TL">Tulcea</option>
+                                                            <option value="VS">Vaslui</option>
+                                                            <option value="VL">Vâlcea</option>
+                                                            <option value="VN">Vrancea</option>
+                                                        </select>
+
+
+                                                    </li>
+
+                                                    <li className="list-group-item">
+
+                                                        <label htmlFor="floatingInput"><strong>Registration Date</strong></label> <br/>
+                                                        <input id="registrationDate" type="date" value={vehicleData.registrationDate} onChange={(e) => setVehicleData({ ...vehicleData, registrationDate: e.target.value })}
+                                                        />
+
+                                                    </li>
+
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="headingTwo">
+                                            <button className="accordion-button collapsed" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                    aria-expanded="false" aria-controls="collapseTwo">
+                                                Technical Data
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" className="accordion-collapse collapse"
+                                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div className="accordion-body">
+
+                                                <ul className="list-group list-group-flush">
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="fuelType"
+                                                                   placeholder="name@example.com"
+                                                                   value={techData.fuelType}
+                                                                   onChange={(e) => setTechData({ ...techData, fuelType: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Fuel Type</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="consumption"
+                                                                   placeholder="name@example.com"
+                                                                   value={techData.consumption}
+                                                                   onChange={(e) => setTechData({ ...techData, consumption: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Consumption</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="power"
+                                                                   placeholder="name@example.com"
+                                                                   value={techData.power}
+                                                                   onChange={(e) => setTechData({ ...techData, power: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Power</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="engineDisplacement"
+                                                                   placeholder="name@example.com"
+                                                                   value={techData.engineDisplacement}
+                                                                   onChange={(e) => setTechData({ ...techData, engineDisplacement: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Engine Displacement</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="nrCylinders"
+                                                                   placeholder="name@example.com"
+                                                                   value={techData.nrCylinders}
+                                                                   onChange={(e) => setTechData({ ...techData, nrCylinders: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Number of Cylinders:</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="headingThree">
+                                            <button className="accordion-button collapsed" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                    aria-expanded="false" aria-controls="collapseThree">
+                                                General Data
+                                            </button>
+                                        </h2>
+                                        <div id="collapseThree" className="accordion-collapse collapse"
+                                             aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                            <div className="accordion-body">
+
+                                                <ul className="list-group list-group-flush">
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="yearManuf"
+                                                                   placeholder="name@example.com"
+                                                                   value={genData.yearManuf}
+                                                                   onChange={(e) => setGenData({ ...genData, yearManuf: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Manufacturing Year</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="colorVeh"
+                                                                   placeholder="name@example.com"
+                                                                   value={genData.color}
+                                                                   onChange={(e) => setGenData({ ...genData, color: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Color</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="nrSeats"
+                                                                   placeholder="name@example.com"
+                                                                   value={genData.nrSeats}
+                                                                   onChange={(e) => setGenData({ ...genData, nrSeats: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Number of Seats</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="list-group-item">
+                                                        <div className="form-floating mb-3">
+                                                            <input type="text"
+                                                                   className="form-control"
+                                                                   id="nrDoors"
+                                                                   placeholder="name@example.com"
+                                                                   value={genData.nrDoors}
+                                                                   onChange={(e) => setGenData({ ...genData, nrDoors: e.target.value })}
+                                                                   required={true}
+                                                            ></input>
+                                                            <label htmlFor="floatingInput"><strong>Number of Seats</strong></label>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="headingFour">
+                                            <button className="accordion-button collapsed" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#collapseFour"
+                                                    aria-expanded="false" aria-controls="collapseFour">
+                                                Last Inspection
+                                            </button>
+                                        </h2>
+                                        <div id="collapseFour" className="accordion-collapse collapse"
+                                             aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                            <div className="accordion-body">
+
+                                                <input id="reviewDate" type="date"  onChange={(e) => setAddInspectionData({ ...addInspectionData, reviewDate: e.target.value })}
+                                                />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-primary" onClick={registerVehicle}>Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
