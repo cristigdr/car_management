@@ -247,6 +247,16 @@ export default function MainPage(){
             plateNumber: plateNr.generatedCode,
         }));
     }, [plateNr.generatedCode]);
+
+    const deleteVehicle = async (id) => {
+        try {
+            await httpClient.delete(`http://localhost:8080/deleteVehicle/${id}`);
+            setVehicles(vehicles.filter((vehicle) => vehicle.id !== id));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return(
         <div>
             <div id="tableVeh">
@@ -296,7 +306,7 @@ export default function MainPage(){
                             <td>
                                 <div className="icons">
                                     <FontAwesomeIcon icon={faPen} size="lg" title="Update" style={{cursor: "pointer"}} onClick={() => toggleVehicle(vehicle.id)}/>
-                                    <FontAwesomeIcon icon={faTrash} size="lg" title="Delete" style={{cursor: "pointer"}}/>
+                                    <FontAwesomeIcon icon={faTrash} size="lg" title="Delete" style={{cursor: "pointer"}} onClick={() => deleteVehicle(vehicle.id)}/>
                                 </div>
                             </td>
 
