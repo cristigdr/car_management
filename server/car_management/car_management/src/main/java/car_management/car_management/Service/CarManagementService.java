@@ -50,7 +50,7 @@ public class CarManagementService {
     }
 
     public List <Vehicle> findByOwner(String owner){
-        return vehicleRepository.findByOwner(owner);
+        return vehicleRepository.findByOwnerContaining(owner);
     }
 
     public List <Vehicle> showVehiclesAfterRegDate(Date date){

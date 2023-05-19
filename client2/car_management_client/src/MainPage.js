@@ -302,6 +302,50 @@ export default function MainPage(){
         searchByOwner(ownerInput);
     }
 
+    const[dateInput, setDateInput] = useState('');
+
+    async function showRegDateAfter(dateInput){
+        try {
+            const response = await httpClient.get(`http://localhost:8080/showAfterRegDate/${dateInput}`);
+            const searchedVehicles = response.data;
+            setVehicles(searchedVehicles);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function showRegDateAfterOnClick(){
+        showRegDateAfter(dateInput);
+    }
+
+    async function showBeforeLastInspection(dateInput){
+        try {
+            const response = await httpClient.get(`http://localhost:8080/showBeforeLastReview/${dateInput}`);
+            const searchedVehicles = response.data;
+            setVehicles(searchedVehicles);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function showBeforeLastInspectionOnClick(){
+        showBeforeLastInspection(dateInput);
+    }
+
+    async function sortByType(){
+        try {
+            const response = await httpClient.get(`http://localhost:8080/sortByType`);
+            const searchedVehicles = response.data;
+            setVehicles(searchedVehicles);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function sortByTypeOnClick(){
+        sortByType();
+    }
+
     return(
         <div>
 
@@ -310,6 +354,7 @@ export default function MainPage(){
 
                 <div className='textSearch'>
                     <div className="form-floating mb-3 grid-item">
+
                         <input
                             type="text"
                             className="form-control"
@@ -319,13 +364,22 @@ export default function MainPage(){
                             onChange={(event) => setPlateNrInput(event.target.value)}
                             required={true}
                         />
+
                         <label htmlFor="floatingInput"><strong>Plate Number</strong></label>
+
                     </div>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{ color: "black",  cursor: 'pointer' }} onClick={searchByPlateOnClick}/>
+
+                    <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        size="2xl"
+                        style={{ color: "black",  cursor: 'pointer' }}
+                        onClick={searchByPlateOnClick}/>
+
                 </div>
 
                 <div className='textSearch'>
                     <div className="form-floating mb-3 grid-item">
+
                         <input
                             type="text"
                             className="form-control"
@@ -335,22 +389,56 @@ export default function MainPage(){
                             onChange={(event) => setOwnerInput(event.target.value)}
                             required={true}
                         />
+
                         <label htmlFor="floatingInput"><strong>Owner</strong></label>
+
                     </div>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{ color: "black",  cursor: 'pointer' }} onClick={searchByOwnerOnClick}/>
+
+                    <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        size="2xl"
+                        style={{ color: "black",  cursor: 'pointer' }}
+                        onClick={searchByOwnerOnClick}/>
+
                 </div>
 
                 <div className="dateForm">
+
                     <p><strong>Show vehicles with registration date after: </strong></p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input id="registrationDate" type="date"/>&nbsp;&nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{color: "black", cursor: 'pointer'}}/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <input id="registrationDate"
+                           type="date"
+                           value={dateInput}
+                           onChange={(event) => setDateInput(event.target.value)}
+                    />
+
+                    &nbsp;&nbsp;&nbsp;
+                    <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        size="2xl"
+                        style={{color: "black", cursor: 'pointer'}}
+                        onClick={showRegDateAfterOnClick}
+                    />
+
                 </div>
+
                     <br/>
+
                 <div className="dateForm">
+
                     <p ><strong>Show vehicles with last inspection date before: </strong></p>
-                    <input id="registrationDate" type="date"/> &nbsp;&nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{color: "black",  cursor: 'pointer'}}/>
+
+                    <input id="registrationDate"
+                           type="date"
+                           value={dateInput}
+                           onChange={(event) => setDateInput(event.target.value)}
+                    />
+
+                    &nbsp;&nbsp;&nbsp;
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" style={{color: "black",  cursor: 'pointer'}} onClick={showBeforeLastInspectionOnClick}/>
                 </div>
+
                 <br/>
             </div>
 
@@ -369,7 +457,7 @@ export default function MainPage(){
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Owner</th>
-                            <th scope="col">Vehicle Type</th>
+                            <th scope="col" onClick={sortByTypeOnClick} style={{cursor:'pointer'}} title="Sort by Vehicle Type">Vehicle Type</th>
                             <th scope="col">Brand</th>
                             <th scope="col">Plate Number</th>
                             <th scope="col">Registration Date</th>

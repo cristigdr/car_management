@@ -12,7 +12,7 @@ public interface IVehicleRepository extends CrudRepository<Vehicle, Long> {
 
     Vehicle findByplateNumber(String plateNumber);
 
-    List<Vehicle> findByOwner(String owner);
+    List<Vehicle> findByOwnerContaining(String owner);
 
     List<Vehicle> findByRegistrationDateGreaterThanEqual(Date givenDate);
 

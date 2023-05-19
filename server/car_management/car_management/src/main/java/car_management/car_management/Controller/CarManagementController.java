@@ -58,7 +58,7 @@ public class CarManagementController {
 
     @GetMapping("/showAfterRegDate/{date}")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<List <Vehicle>> showVehiclesAfterRegDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-dd-MM") Date date) {
+    public ResponseEntity<List <Vehicle>> showVehiclesAfterRegDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         List<Vehicle> vehicles= carService.showVehiclesAfterRegDate(date);
         if (vehicles != null) {
             return ResponseEntity.ok(vehicles);
@@ -69,7 +69,7 @@ public class CarManagementController {
 
     @GetMapping("/showBeforeLastReview/{date}")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<List <Vehicle>> showVehiclesBeforeLastReviewDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-dd-MM") Date date) {
+    public ResponseEntity<List <Vehicle>> showVehiclesBeforeLastReviewDate(@PathVariable@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         List<Vehicle> vehicles= carService.showVehiclesWithLastReviewBeforeDate(date);
         if (vehicles != null) {
             return ResponseEntity.ok(vehicles);
