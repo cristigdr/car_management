@@ -23,4 +23,6 @@ public interface IVehicleRepository extends CrudRepository<Vehicle, Long> {
     List<Vehicle> findVehiclesWithLastReviewBeforeDate(Date givenDate);
 
     List<Vehicle> findByOrderByVehicleType();
+
+
 }

@@ -129,6 +129,17 @@ public class CarManagementController {
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
+    @GetMapping("/latestReviews")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    public ResponseEntity<List<Object[]>> getLatestReview() {
+        List<Object[]> latestReviews = carService.getLatestReviewForEachVehicle();
+        if (latestReviews != null) {
+            return ResponseEntity.ok(latestReviews);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/generatePlateNr/{county}")
     @ResponseBody
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")

@@ -34,7 +34,7 @@ public class CarManagementService {
     }
 
     public List<Review> getReviewsByVehicleId(Long vehicleId) {
-        return reviewRepository.findByVehicleId(vehicleId);
+        return reviewRepository.findByVehicleIdOrderByReviewDateDesc(vehicleId);
     }
 
     public GeneralData getGeneralDataByVehicleId(Long vehicleId) {
@@ -63,6 +63,10 @@ public class CarManagementService {
 
     public List <Vehicle> sortByType(){
         return vehicleRepository.findByOrderByVehicleType();
+    }
+
+    public List<Object[]> getLatestReviewForEachVehicle(){
+        return reviewRepository.findLatestReviewDatesByVehicle();
     }
 
     public Vehicle insertVehicleWithTechDataAndReviewAndGenData(Vehicle vehicle, TechData techData, Review review, GeneralData generalData) {

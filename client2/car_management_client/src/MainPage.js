@@ -1,15 +1,18 @@
 import {useEffect, useState} from "react";
 import httpClient from "./httpClient";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
-    faGear,
     faCircleInfo,
+    faGear,
+    faMagnifyingGlass,
+    faPen,
+    faPlus,
     faToolbox,
-    faTrash,
-    faPen, faPlus, faMagnifyingGlass
+    faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal} from "bootstrap";
+import moment from 'moment';
 
 export default function MainPage(){
 
@@ -44,6 +47,7 @@ export default function MainPage(){
     const[plateNr, setPlateNr] = useState({
         generatedCode: "",
     });
+    const[latestReviews, setLatestReviews] = useState([]);
 
     useEffect( () =>{
         async function fetchAllVehicles(){
@@ -57,6 +61,17 @@ export default function MainPage(){
         fetchAllVehicles();
     }, []);
 
+    useEffect( () =>{
+        async function fetchLatestReviews(){
+            try{
+                const response = await httpClient.get('http://localhost:8080/latestReviews');
+                setLatestReviews(response.data);
+            }catch (error){
+                console.error(error);
+            }
+        }
+        fetchLatestReviews();
+    }, []);
 
     useEffect(() => {
         async function fetchTechData(){
@@ -102,6 +117,7 @@ export default function MainPage(){
         }fetchGenData();
     }, [selectedVehicleId]);
 
+
     useEffect(() => {
         async function fetchVehicle(){
             try {
@@ -115,6 +131,7 @@ export default function MainPage(){
             }
         }fetchVehicle();
     }, [selectedVehicleId]);
+
 
     useEffect(() => {
         async function fetchPlateNr(){
@@ -166,13 +183,12 @@ export default function MainPage(){
             const response = await httpClient.put(`http://localhost:8080/updateVehicle`, vehicleData);
             console.log(response.data);
             setVehicles((prevVehicles) => {
-                const updatedVehicles = prevVehicles.map((vehicle) => {
+                return prevVehicles.map((vehicle) => {
                     if (vehicle.id === vehicleData.id) {
                         return response.data;
                     }
                     return vehicle;
                 });
-                return updatedVehicles;
             });
         } catch (error) {
             console.error(error);
@@ -469,32 +485,36 @@ export default function MainPage(){
                     </thead>
 
                     <tbody>
-                    {vehicles.map(vehicle => (
-                        <tr key={vehicle.id}>
-                            <th scope="row">{vehicle.id}</th>
-                            <td>{vehicle.owner}</td>
-                            <td>{vehicle.vehicleType}</td>
-                            <td>{vehicle.brand}</td>
-                            <td>{vehicle.plateNumber}</td>
-                            <td>{vehicle.registrationDate}</td>
+                    {vehicles.map(vehicle => {
+                        const latestReview = latestReviews.find(review => review[0] === vehicle.id);
+                        const formattedLatestReview = latestReview ? moment(latestReview[1]).format('YYYY-MM-DD') : "";
+                        return(
+                            <tr key={vehicle.id}>
+                                <th scope="row">{vehicle.id}</th>
+                                <td>{vehicle.owner}</td>
+                                <td>{vehicle.vehicleType}</td>
+                                <td>{vehicle.brand}</td>
+                                <td>{vehicle.plateNumber}</td>
+                                <td>{vehicle.registrationDate}</td>
 
-                            <td>...</td>
-                            <td>
-                                <div className="icons">
-                                    <FontAwesomeIcon icon={faGear} size="lg" title="Technical Data" style={{cursor: "pointer"}}   onClick={() => toggleTechData(vehicle.id)}/>
-                                    <FontAwesomeIcon icon={faCircleInfo} size="lg" title="General Data" style={{cursor: "pointer"}} onClick={() => toggleGenData(vehicle.id)}/>
-                                    <FontAwesomeIcon icon={faToolbox} size="lg" title="Inspection History" style={{cursor: "pointer"}} onClick={() => toggleInspections(vehicle.id)}/>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="icons">
-                                    <FontAwesomeIcon icon={faPen} size="lg" title="Update" style={{cursor: "pointer"}} onClick={() => toggleVehicle(vehicle.id)}/>
-                                    <FontAwesomeIcon icon={faTrash} size="lg" title="Delete" style={{cursor: "pointer"}} onClick={() => deleteVehicle(vehicle.id)}/>
-                                </div>
-                            </td>
+                                <td>{formattedLatestReview}</td>
+                                <td>
+                                    <div className="icons">
+                                        <FontAwesomeIcon icon={faGear} size="lg" title="Technical Data" style={{cursor: "pointer"}}   onClick={() => toggleTechData(vehicle.id)}/>
+                                        <FontAwesomeIcon icon={faCircleInfo} size="lg" title="General Data" style={{cursor: "pointer"}} onClick={() => toggleGenData(vehicle.id)}/>
+                                        <FontAwesomeIcon icon={faToolbox} size="lg" title="Inspection History" style={{cursor: "pointer"}} onClick={() => toggleInspections(vehicle.id)}/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="icons">
+                                        <FontAwesomeIcon icon={faPen} size="lg" title="Update" style={{cursor: "pointer"}} onClick={() => toggleVehicle(vehicle.id)}/>
+                                        <FontAwesomeIcon icon={faTrash} size="lg" title="Delete" style={{cursor: "pointer"}} onClick={() => deleteVehicle(vehicle.id)}/>
+                                    </div>
+                                </td>
 
-                        </tr>
-                    ))}
+                            </tr>
+                        )
+                    })}
                     </tbody>
 
                 </table>
