@@ -17,7 +17,7 @@ public class Review {
 
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "vehicle_id")
     @JsonIgnore
     private Vehicle vehicle;

@@ -14,7 +14,6 @@ public class CarManagementService {
     private final IVehicleRepository vehicleRepository;
     private final ITechDataRepository techDataRepository;
     private final IReviewRepository reviewRepository;
-
     private final IGeneralData generalDataRepo;
 
     @Autowired

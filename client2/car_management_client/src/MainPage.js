@@ -49,102 +49,87 @@ export default function MainPage(){
     });
     const[latestReviews, setLatestReviews] = useState([]);
 
-    useEffect( () =>{
-        async function fetchAllVehicles(){
-            try{
+    useEffect(() => {
+        (async () => {
+            try {
                 const response = await httpClient.get('http://localhost:8080/getVehicles');
                 setVehicles(response.data);
-            }catch (error){
+            } catch (error) {
                 console.error(error);
             }
-        }
-        fetchAllVehicles();
-    }, []);
-
-    useEffect( () =>{
-        async function fetchLatestReviews(){
-            try{
-                const response = await httpClient.get('http://localhost:8080/latestReviews');
-                setLatestReviews(response.data);
-            }catch (error){
-                console.error(error);
-            }
-        }
-        fetchLatestReviews();
+        })();
     }, []);
 
     useEffect(() => {
-        async function fetchTechData(){
+        (async () => {
+            try {
+                const response = await httpClient.get('http://localhost:8080/latestReviews');
+                setLatestReviews(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        (async () => {
             try {
                 const response = await httpClient.get(`http://localhost:8080/getTechData/${selectedVehicleId}`);
                 setTechData(response.data);
-
-
             } catch (error) {
                 console.error(error);
-
             }
-        }fetchTechData();
-    }, [selectedVehicleId]);
+        })();
+        }, [selectedVehicleId]);
+
 
     useEffect(() => {
-        async function fetchInspections(){
+        (async () => {
             try {
                 const response = await httpClient.get(`http://localhost:8080/getReviews/${selectedVehicleId}`);
                 setInspections(response.data);
-
-
             } catch (error) {
                 console.error(error);
-
             }
-        }fetchInspections();
-    }, [selectedVehicleId]);
+        })();
+        }, [selectedVehicleId]);
 
 
 
     useEffect(() => {
-        async function fetchGenData(){
+        (async () => {
             try {
                 const response = await httpClient.get(`http://localhost:8080/getGeneralData/${selectedVehicleId}`);
                 setGenData(response.data);
-
-
             } catch (error) {
                 console.error(error);
-
             }
-        }fetchGenData();
-    }, [selectedVehicleId]);
+        })();
+        }, [selectedVehicleId]);
 
 
     useEffect(() => {
-        async function fetchVehicle(){
+        (async () => {
             try {
                 const response = await httpClient.get(`http://localhost:8080/getVehicle/${selectedVehicleId}`);
                 setVehicleData(response.data);
-
-
             } catch (error) {
                 console.error(error);
-
             }
-        }fetchVehicle();
+        })();
+
     }, [selectedVehicleId]);
 
 
     useEffect(() => {
-        async function fetchPlateNr(){
+        (async () => {
             try {
                 const response = await httpClient.get(`http://localhost:8080/generatePlateNr/${county}`);
                 setPlateNr(response.data);
-
-
             } catch (error) {
                 console.error(error);
-
             }
-        }fetchPlateNr();
+        })();
     }, [county]);
 
     const handleCountyChange = (event) => {
@@ -297,9 +282,14 @@ export default function MainPage(){
         }
     }
 
-    function searchByPlateOnClick(){
-        searchByPlate(plateNrInput);
+    async function searchByPlateOnClick() {
+        try {
+            await searchByPlate(plateNrInput);
+        } catch (error) {
+            console.error(error);
+        }
     }
+
 
     const [ownerInput, setOwnerInput] = useState('');
 
@@ -314,8 +304,12 @@ export default function MainPage(){
     }
 
 
-    function searchByOwnerOnClick(){
-        searchByOwner(ownerInput);
+    async function searchByOwnerOnClick() {
+        try {
+            await searchByOwner(ownerInput);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const[dateInput, setDateInput] = useState('');
@@ -330,8 +324,12 @@ export default function MainPage(){
         }
     }
 
-    function showRegDateAfterOnClick(){
-        showRegDateAfter(dateInput);
+    async function showRegDateAfterOnClick() {
+        try {
+            await showRegDateAfter(dateInput);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function showBeforeLastInspection(dateInput){
@@ -344,8 +342,12 @@ export default function MainPage(){
         }
     }
 
-    function showBeforeLastInspectionOnClick(){
-        showBeforeLastInspection(dateInput);
+    async function showBeforeLastInspectionOnClick() {
+        try {
+            await showBeforeLastInspection(dateInput);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function sortByType(){
@@ -358,8 +360,12 @@ export default function MainPage(){
         }
     }
 
-    function sortByTypeOnClick(){
-        sortByType();
+    async function sortByTypeOnClick() {
+        try {
+            await sortByType();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return(
@@ -445,7 +451,7 @@ export default function MainPage(){
 
                     <p ><strong>Show vehicles with last inspection date before: </strong></p>
 
-                    <input id="registrationDate"
+                    <input id="lastInspDate"
                            type="date"
                            value={dateInput}
                            onChange={(event) => setDateInput(event.target.value)}
@@ -487,7 +493,9 @@ export default function MainPage(){
                     <tbody>
                     {vehicles.map(vehicle => {
                         const latestReview = latestReviews.find(review => review[0] === vehicle.id);
-                        const formattedLatestReview = latestReview ? moment(latestReview[1]).format('YYYY-MM-DD') : "";
+                        const formattedLatestReview = latestReview ? moment(latestReview[1]).format('DD-MM-YYYY') : "";
+                        const formattedRegistrationDate = moment(vehicle.registrationDate).add(1, 'day').format('DD-MM-YYYY');
+
                         return(
                             <tr key={vehicle.id}>
                                 <th scope="row">{vehicle.id}</th>
@@ -495,7 +503,7 @@ export default function MainPage(){
                                 <td>{vehicle.vehicleType}</td>
                                 <td>{vehicle.brand}</td>
                                 <td>{vehicle.plateNumber}</td>
-                                <td>{vehicle.registrationDate}</td>
+                                <td>{formattedRegistrationDate}</td>
 
                                 <td>{formattedLatestReview}</td>
                                 <td>
@@ -552,7 +560,7 @@ export default function MainPage(){
 
                                         <li className="list-group-item">
                                             <div className="form-floating mb-3">
-                                                <input type="text"
+                                                <input type="number"
                                                        className="form-control"
                                                        id="consumption"
                                                        placeholder="name@example.com"
@@ -566,7 +574,7 @@ export default function MainPage(){
 
                                         <li className="list-group-item">
                                             <div className="form-floating mb-3">
-                                                <input type="text"
+                                                <input type="number"
                                                        className="form-control"
                                                        id="power"
                                                        placeholder="name@example.com"
@@ -580,7 +588,7 @@ export default function MainPage(){
 
                                         <li className="list-group-item">
                                             <div className="form-floating mb-3">
-                                                <input type="text"
+                                                <input type="number"
                                                        className="form-control"
                                                        id="engineDisplacement"
                                                        placeholder="name@example.com"
@@ -594,7 +602,7 @@ export default function MainPage(){
 
                                         <li className="list-group-item">
                                             <div className="form-floating mb-3">
-                                                <input type="text"
+                                                <input type="number"
                                                        className="form-control"
                                                        id="nrCylinders"
                                                        placeholder="name@example.com"
@@ -634,7 +642,7 @@ export default function MainPage(){
 
                                     <li className="list-group-item">
                                         <div className="form-floating mb-3">
-                                            <input type="text"
+                                            <input type="number"
                                                    className="form-control"
                                                    id="yearManuf"
                                                    placeholder="name@example.com"
@@ -662,7 +670,7 @@ export default function MainPage(){
 
                                     <li className="list-group-item">
                                         <div className="form-floating mb-3">
-                                            <input type="text"
+                                            <input type="number"
                                                    className="form-control"
                                                    id="nrSeats"
                                                    placeholder="name@example.com"
@@ -676,7 +684,7 @@ export default function MainPage(){
 
                                     <li className="list-group-item">
                                         <div className="form-floating mb-3">
-                                            <input type="text"
+                                            <input type="number"
                                                    className="form-control"
                                                    id="nrDoors"
                                                    placeholder="name@example.com"
@@ -684,7 +692,7 @@ export default function MainPage(){
                                                    onChange={(e) => setGenData({ ...genData, nrDoors: e.target.value })}
                                                    required={true}
                                             ></input>
-                                            <label htmlFor="floatingInput"><strong>Number of Seats</strong></label>
+                                            <label htmlFor="floatingInput"><strong>Number of Doors</strong></label>
                                         </div>
                                     </li>
 
@@ -715,7 +723,9 @@ export default function MainPage(){
                                 <ul className="list-group list-group-numbered">
 
                                     {inspections.map(inspection => (
-                                      <li className=" list-group-item">{inspection.reviewDate}</li>
+                                      <li className=" list-group-item">
+                                          {moment(inspection.reviewDate).add(1, 'day').format('DD-MM-YYYY')}
+                                      </li>
                                     ))}
 
                                 </ul>
@@ -901,7 +911,7 @@ export default function MainPage(){
                             </div>
                             <div className="modal-body">
 
-                                <div class="accordion accordion-flush" id="accordionExample">
+                                <div className="accordion accordion-flush" id="accordionExample">
 
                                     <div className="accordion-item">
                                         <h2 className="accordion-header" id="headingOne">
@@ -1086,7 +1096,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="consumption"
                                                                    placeholder="name@example.com"
@@ -1100,7 +1110,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="power"
                                                                    placeholder="name@example.com"
@@ -1114,7 +1124,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="engineDisplacement"
                                                                    placeholder="name@example.com"
@@ -1128,7 +1138,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="nrCylinders"
                                                                    placeholder="name@example.com"
@@ -1162,7 +1172,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="yearManuf"
                                                                    placeholder="name@example.com"
@@ -1190,7 +1200,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="nrSeats"
                                                                    placeholder="name@example.com"
@@ -1204,7 +1214,7 @@ export default function MainPage(){
 
                                                     <li className="list-group-item">
                                                         <div className="form-floating mb-3">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                    className="form-control"
                                                                    id="nrDoors"
                                                                    placeholder="name@example.com"
@@ -1212,7 +1222,7 @@ export default function MainPage(){
                                                                    onChange={(e) => setGenData({ ...genData, nrDoors: e.target.value })}
                                                                    required={true}
                                                             ></input>
-                                                            <label htmlFor="floatingInput"><strong>Number of Seats</strong></label>
+                                                            <label htmlFor="floatingInput"><strong>Number of Doors</strong></label>
                                                         </div>
                                                     </li>
 
